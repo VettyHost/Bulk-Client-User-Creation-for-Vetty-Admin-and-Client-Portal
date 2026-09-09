@@ -426,46 +426,23 @@
       </div>
     </div>
 
-    <!-- 6. BULK DEACTIVATION MODAL (Email Address + Client ID) -->
-    <div id="bulkDeactivationModal" class="bg-white rounded-lg shadow-xl max-w-lg w-full flex flex-col hidden modal-anim max-h-[90vh]">
-      <div class="flex justify-between items-center px-6 py-4 border-b border-gray-200">
-        <div>
-          <h3 class="text-lg font-bold text-gray-800">Deactivate Client Users</h3>
-          <p class="text-xs text-gray-500">Provide CSV containing selected client users' email addresses & Client ID</p>
-        </div>
-        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition text-2xl font-semibold">&times;</button>
+    <!-- 6. BULK DEACTIVATION WARNING MODAL (Red Exclamation Warning) -->
+    <div id="bulkDeactivationModal" class="bg-white rounded-lg shadow-xl max-w-sm w-full flex flex-col hidden modal-anim p-6 text-center">
+      <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-red-100 text-red-600 mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
       </div>
-
-      <div class="p-6 space-y-4 text-xs text-gray-600">
-        <!-- Sample Template Link Box -->
-        <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 flex items-center justify-between">
-          <div>
-            <span class="font-semibold text-gray-800 text-xs">Need the deactivation file structure?</span>
-            <p class="text-[11px] text-gray-500">Template fields: <code class="bg-gray-200 px-1 py-0.5 rounded">Email Address, Client ID</code></p>
-          </div>
-          <button onclick="downloadDeactivationTemplate()" class="border border-brandBlue text-brandBlue hover:bg-blue-50 px-3 py-1.5 rounded font-semibold text-xs transition">
-            Sample Template
-          </button>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Upload Deactivation File (.CSV or .Excel)</label>
-          <div class="flex flex-col gap-1.5">
-            <input type="file" id="deactivationFileInput" accept=".csv, .xlsx, .xls" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-brandBlue hover:file:bg-blue-100 cursor-pointer border border-gray-300 rounded-md p-1" onchange="handleDeactivationFileSelected(event)">
-            <div id="deactivationFileSuccessBadge" class="hidden items-center gap-1.5 text-xs text-emerald-600 font-semibold mt-1">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-600 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-              </svg>
-              <span id="deactivationFileSuccessText">File uploaded successfully</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-3 rounded-b-lg">
-        <button onclick="closeModal()" class="px-5 py-2 border border-gray-300 text-gray-600 hover:bg-gray-100 font-semibold rounded-md text-sm transition">Cancel</button>
-        <button onclick="executeBulkDeactivation()" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md text-sm transition shadow-sm">
-          Deactivate Users
+      <h3 class="text-lg font-bold text-gray-900 mb-2">Warning</h3>
+      <p class="text-sm text-gray-600 mb-6" id="deactivateWarningText">
+        The selected users will be deactivated Are you sure you want to proceed?
+      </p>
+      <div class="flex justify-center gap-3">
+        <button onclick="closeModal()" class="px-5 py-2 border border-gray-300 text-gray-700 hover:bg-gray-100 font-semibold rounded-md text-sm transition">
+          Cancel
+        </button>
+        <button onclick="confirmDeactivateSelectedUsers()" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md text-sm transition shadow-sm">
+          Deactivate
         </button>
       </div>
     </div>
@@ -1318,99 +1295,33 @@
 
     function openBulkDeactivationModal() {
       document.getElementById('bulkActionsDropdown').classList.add('hidden');
+      
+      if (selectedUserIds.size === 0) {
+        showConfirmationNotification("Please select at least one user to deactivate.");
+        return;
+      }
+
+      const warningText = document.getElementById('deactivateWarningText');
+      if (warningText) {
+        warningText.textContent = `Warning: The selected ${selectedUserIds.size} user${selectedUserIds.size > 1 ? 's' : ''} will be deactivated.`;
+      }
+
       document.getElementById('modalOverlay').classList.remove('hidden');
       document.getElementById('bulkDeactivationModal').classList.remove('hidden');
-      
-      const badge = document.getElementById('deactivationFileSuccessBadge');
-      if (badge) badge.classList.add('hidden');
-      const input = document.getElementById('deactivationFileInput');
-      if (input) input.value = '';
-      deactivationUserEmails = [];
     }
 
-    function downloadDeactivationTemplate() {
-      const csvContent = "Email Address,Client ID\n" +
-                         "william.harrison@company.com,CLIENT-8802\n" +
-                         "emma.richardson@company.com,CLIENT-8802\n" +
-                         "james.sterling@company.com,CLIENT-8802";
+    function confirmDeactivateSelectedUsers() {
+      if (selectedUserIds.size === 0) return;
+      const count = selectedUserIds.size;
 
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", "vetty_clientname_deactivation_template.csv");
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-
-    function handleDeactivationFileSelected(e) {
-      if (!e.target.files || e.target.files.length === 0) return;
-      const file = e.target.files[0];
-      const validExtensions = ['.csv', '.xlsx', '.xls'];
-      const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
-
-      if (!validExtensions.includes(ext)) {
-        showConfirmationNotification("Invalid deactivation file. Only CSV or Excel files are accepted.");
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        const content = evt.target.result.trim();
-        const lines = content.split(/\r?\n/).filter(l => l.trim().length > 0);
-        
-        if (lines.length < 2) {
-          showConfirmationNotification("Deactivation file must contain headers and at least 1 client email.");
-          return;
-        }
-
-        deactivationUserEmails = [];
-
-        for (let i = 1; i < lines.length; i++) {
-          const parts = lines[i].split(',').map(p => p.trim().replace(/"/g, ''));
-          const email = parts[0];
-          if (email && email.includes('@')) {
-            deactivationUserEmails.push(email);
-          }
-        }
-
-        // Show green tick with success badge
-        const badge = document.getElementById('deactivationFileSuccessBadge');
-        const text = document.getElementById('deactivationFileSuccessText');
-        if (badge && text) {
-          text.textContent = `${file.name} uploaded successfully (${deactivationUserEmails.length} users ready)`;
-          badge.classList.remove('hidden');
-          badge.classList.add('flex');
-        }
-      };
-      reader.readAsText(file);
-    }
-
-    function executeBulkDeactivation() {
-      const fileInput = document.getElementById('deactivationFileInput');
-      if (!fileInput || !fileInput.files || fileInput.files.length === 0 || deactivationUserEmails.length === 0) {
-        showConfirmationNotification("Please upload deactivation file.");
-        return;
-      }
-
-      const lowerEmails = new Set(deactivationUserEmails.map(e => e.toLowerCase()));
-      let deactivatedCount = 0;
-
-      // Remove or mark inactive
-      users = users.filter(user => {
-        if (lowerEmails.has(user.email.toLowerCase())) {
-          deactivatedCount++;
-          return false; // Remove from client user list
-        }
-        return true;
-      });
-
+      // Remove the selected users from the active dataset
+      users = users.filter(user => !selectedUserIds.has(user.id));
       selectedUserIds.clear();
+
       closeModal();
       renderTable();
 
-      showConfirmationNotification(`Successfully deactivated ${deactivatedCount} Client Users.`);
+      showConfirmationNotification(`Successfully deactivated ${count} user${count > 1 ? 's' : ''}.`);
     }
   </script>
 </body>
