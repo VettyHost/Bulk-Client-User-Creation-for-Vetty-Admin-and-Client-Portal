@@ -152,9 +152,8 @@
                 Allowed Notifications
               </button>
               <div class="border-t border-gray-100 my-1"></div>
-              <button onclick="openBulkDeactivationModal()" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-50 transition flex items-center justify-between">
-                <span>Deactivate Client Users</span>
-                <span class="text-[10px] bg-red-100 text-red-600 px-1 rounded">CSV</span>
+              <button onclick="openBulkDeactivationModal()" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-50 transition block">
+                Deactivate Client Users
               </button>
             </div>
           </div>
@@ -363,7 +362,7 @@
       </div>
     </div>
 
-    <!-- 5. BULK UPLOAD CLIENT USERS MODAL (Upload CSV -> Validate -> Create Users -> Send Invitation) -->
+    <!-- 5. BULK UPLOAD CLIENT USERS MODAL (Only Template Section & Upload Section) -->
     <div id="bulkUploadModal" class="bg-white rounded-lg shadow-xl max-w-2xl w-full flex flex-col hidden modal-anim max-h-[92vh]">
       <!-- Header -->
       <div class="flex justify-between items-center px-6 py-4 border-b border-gray-200">
@@ -374,118 +373,56 @@
         <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition text-2xl font-semibold">&times;</button>
       </div>
 
-      <!-- Step Indicator Bar -->
-      <div class="bg-gray-50 border-b border-gray-200 px-6 py-3">
-        <div class="flex items-center justify-between text-xs font-medium">
-          <div class="flex items-center gap-1.5" id="stepIndicator1">
-            <span class="w-5 h-5 rounded-full bg-brandBlue text-white flex items-center justify-center text-[10px] font-bold">1</span>
-            <span class="text-brandBlue font-semibold">Upload File</span>
-          </div>
-          <span class="text-gray-300">───</span>
-          <div class="flex items-center gap-1.5" id="stepIndicator2">
-            <span class="w-5 h-5 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-[10px] font-bold" id="stepBadge2">2</span>
-            <span class="text-gray-500" id="stepLabel2">Validate Data</span>
-          </div>
-          <span class="text-gray-300">───</span>
-          <div class="flex items-center gap-1.5" id="stepIndicator3">
-            <span class="w-5 h-5 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-[10px] font-bold" id="stepBadge3">3</span>
-            <span class="text-gray-500" id="stepLabel3">Create & Send Invite</span>
-          </div>
-        </div>
-      </div>
-
       <!-- Modal Body Content -->
-      <div class="flex-grow overflow-y-auto px-6 py-4 space-y-4 text-xs text-gray-600">
-        
-        <!-- STEP 1: Upload & Template Download -->
-        <div id="bulkUploadStep1" class="space-y-4">
-          <div class="bg-blue-50/70 border border-blue-200 rounded-lg p-3.5 flex items-start justify-between gap-4">
-            <div>
-              <h4 class="font-semibold text-blue-900 text-sm">Download CSV / Excel Template</h4>
-              <p class="text-gray-600 text-xs mt-0.5">Includes required headers: First Name, Last Name, Email Address, User Role, User Department, and User Location.</p>
-              <div class="mt-2 text-[11px] text-amber-800 bg-amber-50 border border-amber-200 p-2 rounded">
-                <strong>Note:</strong> "Set as Default" will always be <em>No</em> by default. For custom default overrides, contact Vetty Admin.
-              </div>
+      <div class="flex-grow overflow-y-auto px-6 py-5 space-y-5 text-xs text-gray-600">
+        <!-- Template Download Section -->
+        <div class="bg-blue-50/70 border border-blue-200 rounded-lg p-4 flex items-start justify-between gap-4">
+          <div>
+            <h4 class="font-semibold text-blue-900 text-sm">Download CSV / Excel Template</h4>
+            <p class="text-gray-600 text-xs mt-0.5">Includes required headers: First Name, Last Name, Email Address, User Role, User Department, and User Location.</p>
+            <div class="mt-2 text-[11px] text-amber-800 bg-amber-50 border border-amber-200 p-2 rounded">
+              <strong>Note:</strong> "Set as Default" will always be <em>No</em> by default. For custom default overrides, contact Vetty Admin.
             </div>
-            <button 
-              onclick="downloadBulkUploadTemplate()" 
-              class="shrink-0 bg-white border border-brandBlue text-brandBlue hover:bg-blue-100 font-semibold px-3 py-1.5 rounded text-xs transition flex items-center gap-1.5 shadow-xs"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-              Download Template
-            </button>
           </div>
-
-          <!-- File Drop Zone -->
-          <div 
-            id="dropZone" 
-            class="border-2 border-dashed border-gray-300 hover:border-brandBlue rounded-lg p-6 text-center transition cursor-pointer bg-gray-50/50"
-            onclick="document.getElementById('csvFileInput').click()"
-            ondragover="event.preventDefault(); this.classList.add('border-brandBlue', 'bg-blue-50/30');"
-            ondragleave="this.classList.remove('border-brandBlue', 'bg-blue-50/30');"
-            ondrop="handleFileDrop(event)"
+          <button 
+            onclick="downloadBulkUploadTemplate()" 
+            class="shrink-0 bg-white border border-brandBlue text-brandBlue hover:bg-blue-100 font-semibold px-3 py-1.5 rounded text-xs transition flex items-center gap-1.5 shadow-xs"
           >
-            <input type="file" id="csvFileInput" accept=".csv, .xlsx, .xls" class="hidden" onchange="handleFileSelected(event)">
-            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-10 w-10 text-gray-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
             </svg>
-            <p class="text-sm font-semibold text-gray-700">Click to upload or drag and drop</p>
-            <p class="text-xs text-gray-500 mt-1">Supported formats: <span class="font-semibold text-gray-700">CSV, Excel (.xlsx, .xls)</span> (Max 10MB)</p>
-            <p class="text-[11px] text-gray-400 mt-2" id="selectedFileInfo">No file selected yet</p>
-          </div>
+            Download Template
+          </button>
         </div>
 
-        <!-- STEP 2 & 3: Validation Review & Creation Preview -->
-        <div id="bulkUploadStep2" class="space-y-3 hidden">
-          <!-- Scanning Progress Status -->
-          <div class="bg-gray-50 border border-gray-200 rounded p-3 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span class="text-xs font-semibold text-gray-700" id="scanStatusLabel">Virus Scan: Passed | ASCII Encoding: Verified</span>
-            </div>
-            <span class="text-[11px] font-mono text-gray-500" id="fileStatsLabel">0 rows parsed</span>
-          </div>
-
-          <!-- Validation Errors Summary Banner (if any) -->
-          <div id="validationAlertBanner" class="hidden p-3 rounded text-xs border"></div>
-
-          <!-- Parsed Data Review Table -->
-          <div class="border border-gray-200 rounded-lg overflow-hidden max-h-60 overflow-y-auto">
-            <table class="min-w-full divide-y divide-gray-200 text-left text-[11px]">
-              <thead class="bg-gray-100 text-gray-700 font-semibold uppercase">
-                <tr>
-                  <th class="py-2 px-2.5 w-8">#</th>
-                  <th class="py-2 px-2.5">Name</th>
-                  <th class="py-2 px-2.5">Email</th>
-                  <th class="py-2 px-2.5">Role</th>
-                  <th class="py-2 px-2.5">Department</th>
-                  <th class="py-2 px-2.5">Location</th>
-                  <th class="py-2 px-2.5 text-center">Status</th>
-                </tr>
-              </thead>
-              <tbody id="parsedRowsTableBody" class="divide-y divide-gray-200 bg-white">
-                <!-- Programmatic review rows -->
-              </tbody>
-            </table>
-          </div>
+        <!-- File Upload Section -->
+        <div 
+          id="dropZone" 
+          class="border-2 border-dashed border-gray-300 hover:border-brandBlue rounded-lg p-8 text-center transition cursor-pointer bg-gray-50/50"
+          onclick="document.getElementById('csvFileInput').click()"
+          ondragover="event.preventDefault(); this.classList.add('border-brandBlue', 'bg-blue-50/30');"
+          ondragleave="this.classList.remove('border-brandBlue', 'bg-blue-50/30');"
+          ondrop="handleFileDrop(event)"
+        >
+          <input type="file" id="csvFileInput" accept=".csv, .xlsx, .xls" class="hidden" onchange="handleFileSelected(event)">
+          <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          </svg>
+          <p class="text-sm font-semibold text-gray-700">Click to upload or drag and drop</p>
+          <p class="text-xs text-gray-500 mt-1">Supported formats: <span class="font-semibold text-gray-700">CSV, Excel (.xlsx, .xls)</span> (Max 10MB)</p>
+          <p class="text-xs text-gray-400 mt-2" id="selectedFileInfo">No file selected yet</p>
         </div>
-
       </div>
 
       <!-- Footer Buttons -->
-      <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-between items-center rounded-b-lg">
-        <button onclick="closeModal()" class="px-4 py-2 border border-gray-300 text-gray-600 hover:bg-gray-100 font-semibold rounded-md text-sm transition">Cancel</button>
-        <div class="flex gap-2">
-          <button id="btnUploadBack" onclick="resetBulkUploadStep()" class="hidden px-4 py-2 border border-gray-300 text-gray-700 hover:bg-gray-100 font-semibold rounded-md text-sm transition">Back</button>
-          <button id="btnValidateUpload" onclick="processAndValidateFile()" class="px-5 py-2 bg-brandBlue hover:bg-brandDarkBlue text-white font-semibold rounded-md text-sm transition shadow-sm">
-            Validate File
-          </button>
-          <button id="btnSubmitUsers" onclick="submitBulkUsersCreation()" class="hidden px-5 py-2 bg-brandBlue hover:bg-brandDarkBlue text-white font-semibold rounded-md text-sm transition shadow-sm flex items-center gap-1.5">
-            Create Users & Send Invitation
-          </button>
-        </div>
+      <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-3 rounded-b-lg">
+        <button onclick="closeModal()" class="px-5 py-2 border border-gray-300 text-gray-600 hover:bg-gray-100 font-semibold rounded-md text-sm transition">Cancel</button>
+        <button onclick="submitBulkUpload()" class="px-6 py-2 bg-brandBlue hover:bg-brandDarkBlue text-white font-semibold rounded-md text-sm transition shadow-sm flex items-center gap-1.5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+          </svg>
+          Upload
+        </button>
       </div>
     </div>
 
@@ -509,11 +446,6 @@
           <button onclick="downloadDeactivationTemplate()" class="border border-brandBlue text-brandBlue hover:bg-blue-50 px-3 py-1.5 rounded font-semibold text-xs transition">
             Sample Template
           </button>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Target Client ID</label>
-          <input type="text" id="deactivateClientId" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue" value="CLIENT-8802" placeholder="e.g. CLIENT-8802">
         </div>
 
         <div>
@@ -1299,26 +1231,13 @@
     function openBulkUploadModal() {
       document.getElementById('modalOverlay').classList.remove('hidden');
       document.getElementById('bulkUploadModal').classList.remove('hidden');
-      resetBulkUploadStep();
+      resetBulkUpload();
     }
 
-    function resetBulkUploadStep() {
-      document.getElementById('bulkUploadStep1').classList.remove('hidden');
-      document.getElementById('bulkUploadStep2').classList.add('hidden');
-      document.getElementById('btnValidateUpload').classList.remove('hidden');
-      document.getElementById('btnSubmitUsers').classList.add('hidden');
-      document.getElementById('btnUploadBack').classList.add('hidden');
-
-      // Reset Step Indicators
-      document.getElementById('stepBadge2').className = "w-5 h-5 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-[10px] font-bold";
-      document.getElementById('stepLabel2').className = "text-gray-500";
-      document.getElementById('stepBadge3').className = "w-5 h-5 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-[10px] font-bold";
-      document.getElementById('stepLabel3').className = "text-gray-500";
-
+    function resetBulkUpload() {
       document.getElementById('csvFileInput').value = "";
       document.getElementById('selectedFileInfo').textContent = "No file selected yet";
       uploadedFileRawData = null;
-      parsedValidatedUsers = [];
     }
 
     function handleFileDrop(e) {
@@ -1384,214 +1303,17 @@
       document.body.removeChild(link);
     }
 
-    function processAndValidateFile() {
-      if (!uploadedFileRawData || !uploadedFileRawData.content) {
-        // If no file selected, create a mock default template to demonstrate validation seamlessly
-        const mockDefault = "First Name,Last Name,Email Address,User Role,User Department,User Location\n" +
-                            "Marcus,Vance,marcus.vance@company.com,Super Admin,Talent Acquisition,New Corporate\n" +
-                            "Emily,Thorne,emily.thorne@company.com,View Only,Hr Department,New Delhi\n" +
-                            "David,Wallace,david.wallace@company.com,Super Admin,Prod Department,New Pune";
-        uploadedFileRawData = {
-          name: "vetty_clientname_userstemplate.csv",
-          content: mockDefault,
-          size: 1024
-        };
-        document.getElementById('selectedFileInfo').innerHTML = `<span class="font-semibold text-brandBlue">Using Sample Data: vetty_clientname_userstemplate.csv</span>`;
-      }
-
-      const content = uploadedFileRawData.content.trim();
-
-      // 1. ASCII character validation
-      const nonAsciiMatch = /[^\x00-\x7F]/;
-      if (nonAsciiMatch.test(content)) {
-        showConfirmationNotification("Unsupported non-ASCII characters detected in the file. Please ensure all text uses standard ASCII characters.");
+    function submitBulkUpload() {
+      if (!uploadedFileRawData) {
+        showConfirmationNotification("Please upload a CSV or Excel file before proceeding.");
         return;
       }
-
-      // Parse lines
-      const lines = content.split(/\r?\n/).filter(line => line.trim().length > 0);
-      if (lines.length < 2) {
-        showConfirmationNotification("CSV file must contain a header row and at least one data row.");
-        return;
-      }
-
-      // 2. Validate Headers exactly as required
-      const expectedHeaders = ["first name", "last name", "email address", "user role", "user department", "user location"];
-      const rawHeaderLine = lines[0];
-      const parsedHeaders = rawHeaderLine.split(',').map(h => h.trim().toLowerCase().replace(/"/g, ''));
-
-      const isHeaderValid = expectedHeaders.every((eh, idx) => parsedHeaders[idx] === eh);
-      if (!isHeaderValid) {
-        showConfirmationNotification("Header format mismatch. Expected exactly: First Name, Last Name, Email Address, User Role, User Department, User Location");
-        return;
-      }
-
-      // 3. Valid HHS Roles, Departments, Locations
-      const validRoles = ["super admin", "view only", "super", "admin", "client admin"]; // Supports familiar HHS roles mapping to Vetty
-      const validDepts = departmentsOptions.map(d => d.toLowerCase());
-      const validLocs = locationsOptions.map(l => l.name.toLowerCase());
-      const existingEmails = new Set(users.map(u => u.email.toLowerCase()));
-
-      parsedValidatedUsers = [];
-      let validationErrors = [];
-
-      for (let i = 1; i < lines.length; i++) {
-        const row = lines[i].split(',').map(col => col.trim().replace(/"/g, ''));
-        const rowNum = i + 1;
-
-        if (row.length < 6) {
-          validationErrors.push(`Row ${rowNum}: Incomplete columns`);
-          continue;
-        }
-
-        const [firstName, lastName, email, role, dept, loc] = row;
-        let rowErrors = [];
-
-        // Required checks
-        if (!firstName) rowErrors.push("First Name is blank");
-        if (!lastName) rowErrors.push("Last Name is blank");
-        
-        // Email format validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!email || !emailRegex.test(email)) {
-          rowErrors.push("Invalid Email format");
-        } else if (existingEmails.has(email.toLowerCase())) {
-          rowErrors.push("Duplicate: Email already exists as Client User");
-        }
-
-        // Role validation with HHS to Vetty mapping
-        let mappedRole = "View Only";
-        if (role && validRoles.includes(role.toLowerCase())) {
-          if (role.toLowerCase().includes("super") || role.toLowerCase().includes("admin")) {
-            mappedRole = "Super Admin";
-          } else {
-            mappedRole = "View Only";
-          }
-        } else {
-          rowErrors.push(`Invalid Role '${role}'. Must match Vetty roles: Super Admin or View Only`);
-        }
-
-        // Dept validation
-        let matchedDept = departmentsOptions.find(d => d.toLowerCase() === (dept || "").toLowerCase());
-        if (!matchedDept) {
-          rowErrors.push(`Invalid Department '${dept}'. Must be configured for Client HHS`);
-        }
-
-        // Location validation
-        let matchedLoc = locationsOptions.find(l => l.name.toLowerCase() === (loc || "").toLowerCase());
-        if (!matchedLoc) {
-          rowErrors.push(`Invalid Location '${loc}'. Must be configured for Client HHS`);
-        }
-
-        const isValid = rowErrors.length === 0;
-        parsedValidatedUsers.push({
-          rowNum: rowNum,
-          firstName: firstName,
-          lastName: lastName,
-          fullName: `${firstName} ${lastName}`,
-          email: email,
-          role: mappedRole,
-          dept: matchedDept || dept,
-          loc: matchedLoc ? matchedLoc.name : loc,
-          isValid: isValid,
-          errors: rowErrors
-        });
-
-        if (!isValid) {
-          validationErrors.push(`Row ${rowNum}: ${rowErrors.join(', ')}`);
-        }
-      }
-
-      // Step transition to Review & Create
-      document.getElementById('bulkUploadStep1').classList.add('hidden');
-      document.getElementById('bulkUploadStep2').classList.remove('hidden');
-      document.getElementById('btnValidateUpload').classList.add('hidden');
-      document.getElementById('btnUploadBack').classList.remove('hidden');
-
-      // Update Step 2 Active
-      document.getElementById('stepBadge2').className = "w-5 h-5 rounded-full bg-brandBlue text-white flex items-center justify-center text-[10px] font-bold";
-      document.getElementById('stepLabel2').className = "text-brandBlue font-semibold";
-
-      renderParsedReviewTable(validationErrors);
-    }
-
-    function renderParsedReviewTable(errors) {
-      const tbody = document.getElementById('parsedRowsTableBody');
-      tbody.innerHTML = '';
-      
-      const alertBanner = document.getElementById('validationAlertBanner');
-      const btnSubmit = document.getElementById('btnSubmitUsers');
-
-      document.getElementById('fileStatsLabel').textContent = `${parsedValidatedUsers.length} rows processed`;
-
-      if (errors.length > 0) {
-        alertBanner.classList.remove('hidden');
-        alertBanner.className = "p-3 rounded text-xs border border-amber-300 bg-amber-50 text-amber-900";
-        alertBanner.innerHTML = `<strong>${errors.length} validation issues detected.</strong> Only rows marked as Valid will be created as Client Users.`;
-      } else {
-        alertBanner.classList.remove('hidden');
-        alertBanner.className = "p-3 rounded text-xs border border-emerald-300 bg-emerald-50 text-emerald-900";
-        alertBanner.innerHTML = `<strong>All checks passed!</strong> Virus scan clear, ASCII encoding verified, no duplicate client emails found.`;
-      }
-
-      const validCount = parsedValidatedUsers.filter(u => u.isValid).length;
-      if (validCount > 0) {
-        btnSubmit.classList.remove('hidden');
-        btnSubmit.textContent = `Create ${validCount} Users & Send Invitation`;
-      } else {
-        btnSubmit.classList.add('hidden');
-      }
-
-      parsedValidatedUsers.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.className = item.isValid ? "hover:bg-slate-50" : "bg-red-50/50 hover:bg-red-50";
-
-        tr.innerHTML = `
-          <td class="py-2 px-2.5 font-mono text-gray-400">${item.rowNum}</td>
-          <td class="py-2 px-2.5 font-semibold text-gray-800">${item.fullName || '-'}</td>
-          <td class="py-2 px-2.5 text-gray-600 font-mono">${item.email || '-'}</td>
-          <td class="py-2 px-2.5">${item.role || '-'}</td>
-          <td class="py-2 px-2.5">${item.dept || '-'}</td>
-          <td class="py-2 px-2.5">${item.loc || '-'}</td>
-          <td class="py-2 px-2.5 text-center">
-            ${item.isValid 
-              ? '<span class="text-emerald-600 font-bold bg-emerald-100 px-1.5 py-0.5 rounded text-[10px]">Valid</span>' 
-              : `<span class="text-red-600 font-bold bg-red-100 px-1.5 py-0.5 rounded text-[10px]" title="${item.errors.join('; ')}">Error</span>`
-            }
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function submitBulkUsersCreation() {
-      const validUsers = parsedValidatedUsers.filter(u => u.isValid);
-      if (validUsers.length === 0) {
-        showConfirmationNotification("No valid user entries to create.");
-        return;
-      }
-
-      // Prepend valid users to the in-memory dataset
-      validUsers.forEach(vu => {
-        users.unshift({
-          id: users.length + 1,
-          name: vu.fullName,
-          allowedActions: ["!!_Client: Add Candidate"],
-          locations: [vu.loc],
-          departments: [vu.dept],
-          allowedNotifications: [],
-          email: vu.email,
-          role: vu.role,
-          clientId: "HHS-CLIENT-8802",
-          status: "Active"
-        });
-      });
 
       closeModal();
-      renderTable();
+      resetBulkUpload();
 
-      // Display the required specification message in the blue-theme confirmation modal:
-      showConfirmationNotification("Hey, the file will be processed shortly, and the new Client Users will be created within 6 hours.");
+      // Display trimmed confirmation message in the blue-theme confirmation modal:
+      showConfirmationNotification("Hey, the file will be processed shortly and new client users will be created within 6 hours and receive invite.");
     }
 
     function openBulkDeactivationModal() {
@@ -1603,17 +1325,7 @@
       if (badge) badge.classList.add('hidden');
       const input = document.getElementById('deactivationFileInput');
       if (input) input.value = '';
-
-      // If user selected checkboxes in the main grid, pre-populate them
-      if (selectedUserIds.size > 0) {
-        deactivationUserEmails = [];
-        selectedUserIds.forEach(id => {
-          const u = users.find(user => user.id === id);
-          if (u) deactivationUserEmails.push(u.email);
-        });
-      } else {
-        deactivationUserEmails = [];
-      }
+      deactivationUserEmails = [];
     }
 
     function downloadDeactivationTemplate() {
@@ -1676,14 +1388,9 @@
     }
 
     function executeBulkDeactivation() {
-      const clientId = document.getElementById('deactivateClientId').value.trim();
-      if (!clientId) {
-        showConfirmationNotification("Client ID is required for validating deactivation.");
-        return;
-      }
-
-      if (deactivationUserEmails.length === 0) {
-        showConfirmationNotification("Please upload a CSV or select client users from the grid to deactivate.");
+      const fileInput = document.getElementById('deactivationFileInput');
+      if (!fileInput || !fileInput.files || fileInput.files.length === 0 || deactivationUserEmails.length === 0) {
+        showConfirmationNotification("Please upload deactivation file.");
         return;
       }
 
@@ -1703,7 +1410,7 @@
       closeModal();
       renderTable();
 
-      showConfirmationNotification(`Successfully validated Client ID (${clientId}) and deactivated ${deactivatedCount} Client Users.`);
+      showConfirmationNotification(`Successfully deactivated ${deactivatedCount} Client Users.`);
     }
   </script>
 </body>
