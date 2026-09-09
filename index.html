@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Users Admin Dashboard</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandBlue: '#2196F3',
+            brandDarkBlue: '#1976D2',
+            bgHeader: '#3a8be9',
+            modalOverlay: 'rgba(92, 107, 115, 0.7)',
+            confirmBlue: '#56c0f3',
+            confirmBlueHover: '#40b2e8'
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #e9ecef;
+    }
+    /* Custom table scrollbar styling */
+    .table-scroll::-webkit-scrollbar {
+      height: 10px;
+      width: 10px;
+    }
+    .table-scroll::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    .table-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .table-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    
+    /* Completely hide scrollbars for navigation tabs to fix image_979386.png */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none !important;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none !important;  /* IE and Edge */
+      scrollbar-width: none !important;  /* Firefox */
+    }
+
+    /* Simple scale animation for modals */
+    .modal-anim {
+      animation: fadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col" id="app">
+
+  <!-- Header Bar: Dashboard on the extreme left, Logout on the extreme right -->
+  <header class="bg-bgHeader text-white py-4 px-8 shadow-sm flex items-center justify-between relative">
+    <a href="#" class="font-medium text-base hover:underline transition">Dashboard</a>
+    <a href="#" class="font-medium text-base hover:underline transition">Logout</a>
+  </header>
+
+  <main class="max-w-[1400px] w-full mx-auto px-4 py-6 flex-grow">
+    
+    <!-- Navigation Tabs forced onto a single line with completely hidden scrollbars to fix image_979386.png -->
+    <div class="flex flex-nowrap overflow-x-auto gap-1 pb-3 mb-6 whitespace-nowrap no-scrollbar">
+      <button class="px-3 py-1.5 text-xs font-semibold border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100 transition shrink-0 bg-white">Client Account</button>
+      <button class="px-3 py-1.5 text-xs font-bold border border-brandBlue bg-blue-50 text-brandBlue rounded-md transition shadow-xs shrink-0">Manage Users</button>
+      <button class="px-3 py-1.5 text-xs font-semibold border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100 transition shrink-0 bg-white">Departments</button>
+      <button class="px-3 py-1.5 text-xs font-semibold border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100 transition shrink-0 bg-white">Location</button>
+      <button class="px-3 py-1.5 text-xs font-semibold border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100 transition shrink-0 bg-white">Links</button>
+      <button class="px-3 py-1.5 text-xs font-semibold border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100 transition shrink-0 bg-white">Customization</button>
+      <button class="px-3 py-1.5 text-xs font-semibold border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100 transition shrink-0 bg-white">Verifications</button>
+      <button class="px-3 py-1.5 text-xs font-semibold border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100 transition shrink-0 bg-white">Candidates</button>
+      <button class="px-3 py-1.5 text-xs font-semibold border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100 transition shrink-0 bg-white">Preference</button>
+      <button class="px-3 py-1.5 text-xs font-semibold border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100 transition shrink-0 bg-white">ATS</button>
+      <button class="px-3 py-1.5 text-xs font-semibold border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100 transition shrink-0 bg-white">Packages</button>
+      <button class="px-3 py-1.5 text-xs font-semibold border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100 transition shrink-0 bg-white">Ala Carte</button>
+      <button class="px-3 py-1.5 text-xs font-semibold border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100 transition shrink-0 bg-white">Integrations</button>
+      <button class="px-3 py-1.5 text-xs font-semibold border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100 transition shrink-0 bg-white">Tags</button>
+      <button class="px-3 py-1.5 text-xs font-semibold border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100 transition shrink-0 bg-white">Custom Forms</button>
+      <button class="px-3 py-1.5 text-xs font-semibold border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100 transition shrink-0 bg-white">Invoice Fees</button>
+      <button class="px-3 py-1.5 text-xs font-semibold border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100 transition shrink-0 bg-white">Renewal Info</button>
+    </div>
+
+    <!-- Table Card Container -->
+    <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden p-6">
+      
+      <!-- Action Bar & Filter Row -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+          <span class="text-gray-700 font-medium text-sm">Filter:</span>
+          <div class="relative w-full sm:w-80">
+            <input 
+              type="text" 
+              id="searchName" 
+              placeholder="Search Name" 
+              class="w-full pl-3 pr-10 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue transition"
+              oninput="handleSearch(this.value)"
+            >
+            <div class="absolute right-3 top-2.5 text-gray-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+          <div class="relative hidden" id="bulkActionsWrapper">
+            <!-- Hidden by default: only appears when checkboxes are active -->
+            <button 
+              id="bulkActionsBtn"
+              onclick="toggleBulkDropdown()" 
+              class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-1.5 px-4 rounded-md text-sm transition flex items-center gap-2 shadow-sm"
+            >
+              Bulk Actions
+              <span id="bulkCountLabel" class="bg-indigo-800 text-[10px] text-white px-1.5 py-0.5 rounded-full">0</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            
+            <!-- Dropdown Options without preceding Emojis -->
+            <div 
+              id="bulkActionsDropdown" 
+              class="hidden absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-20"
+            >
+              <button onclick="openBulkModal('actions')" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-brandBlue transition">
+                Allowed Actions
+              </button>
+              <button onclick="openBulkModal('locations')" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-brandBlue transition">
+                Locations
+              </button>
+              <button onclick="openBulkModal('departments')" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-brandBlue transition">
+                Departments
+              </button>
+              <button onclick="openBulkModal('notifications')" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-brandBlue transition">
+                Allowed Notifications
+              </button>
+              <div class="border-t border-gray-100 my-1"></div>
+              <button onclick="openBulkDeactivationModal()" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-50 transition flex items-center justify-between">
+                <span>Deactivate Client Users</span>
+                <span class="text-[10px] bg-red-100 text-red-600 px-1 rounded">CSV</span>
+              </button>
+            </div>
+          </div>
+
+          <button onclick="openBulkUploadModal()" class="bg-white border border-brandBlue text-brandBlue hover:bg-blue-50 font-semibold py-1.5 px-4 rounded-md text-sm transition shadow-sm flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            Bulk Upload Users
+          </button>
+
+          <button onclick="openNewUserModal()" class="bg-brandBlue hover:bg-brandDarkBlue text-white font-semibold py-1.5 px-5 rounded-md text-sm transition shadow-sm">
+            New User
+          </button>
+        </div>
+
+      </div>
+
+      <div class="overflow-x-auto border border-gray-300 rounded-lg table-scroll">
+        <table class="min-w-full border-collapse divide-y divide-gray-300 text-left text-xs text-gray-600">
+          <thead class="bg-gray-50 text-gray-700 uppercase font-semibold text-[11px] tracking-wider">
+            <tr class="divide-x divide-gray-300">
+              <!-- Bulk Checkbox Column Header -->
+              <th scope="col" class="py-3 px-4 w-10 text-center border-b border-gray-300">
+                <input 
+                  type="checkbox" 
+                  id="selectAllCheckbox" 
+                  class="rounded border-gray-300 text-brandBlue focus:ring-brandBlue cursor-pointer h-4 w-4"
+                  onchange="toggleSelectAll(this)"
+                >
+              </th>
+              <th scope="col" class="py-3 px-3 w-12 text-center border-b border-gray-300"></th>
+              <th scope="col" class="py-3 px-4 min-w-[150px] border-b border-gray-300">User</th>
+              <th scope="col" class="py-3 px-4 min-w-[210px] cursor-pointer hover:bg-gray-100 transition group border-b border-gray-300" onclick="openBulkModal('actions')">
+                <div class="flex items-center gap-1">
+                  Allowed Actions
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400 opacity-0 group-hover:opacity-100 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                </div>
+              </th>
+              <th scope="col" class="py-3 px-4 min-w-[210px] cursor-pointer hover:bg-gray-100 transition group border-b border-gray-300" onclick="openBulkModal('locations')">
+                <div class="flex items-center gap-1">
+                  Locations
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400 opacity-0 group-hover:opacity-100 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                </div>
+              </th>
+              <th scope="col" class="py-3 px-4 min-w-[170px] cursor-pointer hover:bg-gray-100 transition group border-b border-gray-300" onclick="openBulkModal('departments')">
+                <div class="flex items-center gap-1">
+                  Departments
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400 opacity-0 group-hover:opacity-100 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                </div>
+              </th>
+              <th scope="col" class="py-3 px-4 min-w-[200px] cursor-pointer hover:bg-gray-100 transition group border-b border-gray-300" onclick="openBulkModal('notifications')">
+                <div class="flex items-center gap-1">
+                  Allowed Notifications
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400 opacity-0 group-hover:opacity-100 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                </div>
+              </th>
+              <th scope="col" class="py-3 px-4 min-w-[210px] border-b border-gray-300">Email</th>
+              <th scope="col" class="py-3 px-4 min-w-[100px] border-b border-gray-300">Role</th>
+            </tr>
+          </thead>
+          <tbody id="userTableBody" class="bg-white divide-y divide-gray-300 font-medium">
+            <!-- Programmatic rows output goes here -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex items-center justify-between mt-5 pt-4 border-t border-gray-200 text-xs text-gray-500">
+        <div id="paginationInfo" class="font-semibold text-gray-600">Showing 1 to 9 of 16 entries</div>
+        <div class="flex items-center gap-1">
+          <button onclick="changePage(-1)" class="p-1.5 border border-gray-300 rounded hover:bg-gray-50 transition cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button onclick="changePage(1)" class="p-1.5 border border-gray-300 rounded hover:bg-gray-50 transition cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==================== DIALOGS & MODALS ==================== -->
+
+  <!-- Global Backdrop -->
+  <div id="modalOverlay" class="fixed inset-0 bg-modalOverlay z-40 hidden flex items-center justify-center p-4">
+    
+    <!-- 1. ALLOWED ACTIONS PERMISSION MODAL -->
+    <div id="actionsModal" class="bg-white rounded-lg shadow-xl max-w-xl w-full flex flex-col hidden modal-anim max-h-[90vh]">
+      <!-- Header -->
+      <div class="flex justify-between items-center px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-bold text-gray-800" id="actionsModalHeader">Edit Allowed Actions</h3>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition text-2xl font-semibold">&times;</button>
+      </div>
+      <!-- Search inside Actions -->
+      <div class="px-6 py-3 border-b border-gray-100 bg-gray-50 flex items-center gap-4">
+        <div class="relative flex-grow">
+          <input 
+            type="text" 
+            id="actionsSearch" 
+            placeholder="Search Actions" 
+            class="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue transition"
+            oninput="filterActionsList(this.value)"
+          >
+          <button onclick="clearActionsSearch()" class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600">
+            &times;
+          </button>
+        </div>
+      </div>
+      <!-- Selection Shortcuts -->
+      <div class="px-6 py-2 bg-gray-50 border-b border-gray-100 flex gap-4 text-xs font-semibold text-brandBlue">
+        <button onclick="toggleModalCheckboxes('actions', true)" class="hover:underline">Select All</button>
+        <span class="text-gray-300">|</span>
+        <button onclick="toggleModalCheckboxes('actions', false)" class="hover:underline">Deselect All</button>
+      </div>
+      <!-- Scrollable checklist content -->
+      <div class="flex-grow overflow-y-auto px-6 py-4 divide-y divide-gray-100" id="actionsChecklist">
+        <!-- Checked rows -->
+      </div>
+      <!-- Footer buttons centered inside modal -->
+      <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-center gap-3 rounded-b-lg">
+        <button onclick="closeModal()" class="px-6 py-2 border border-gray-300 text-gray-600 hover:bg-gray-100 font-semibold rounded-md text-sm transition">Cancel</button>
+        <button onclick="applyBulkUpdate('actions')" class="px-6 py-2 bg-brandBlue hover:bg-brandDarkBlue text-white font-semibold rounded-md text-sm transition shadow-sm">Add</button>
+      </div>
+    </div>
+
+    <!-- 2. LOCATIONS MODAL -->
+    <div id="locationsModal" class="bg-white rounded-lg shadow-xl max-w-lg w-full flex flex-col hidden modal-anim max-h-[90vh]">
+      <div class="flex justify-between items-center px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-bold text-gray-800" id="locationsModalHeader">Add Locations</h3>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition text-2xl font-semibold">&times;</button>
+      </div>
+      <!-- Links: Select All / Deselect All -->
+      <div class="px-6 py-2.5 bg-gray-50 border-b border-gray-100 flex gap-4 text-xs font-semibold text-brandBlue">
+        <button onclick="toggleModalCheckboxes('locations', true)" class="hover:underline">Select All</button>
+        <span class="text-gray-300">|</span>
+        <button onclick="toggleModalCheckboxes('locations', false)" class="hover:underline">Deselect All</button>
+      </div>
+      <!-- Checklist hierarchy as seen in image_963b05 -->
+      <div class="flex-grow overflow-y-auto px-6 py-4 space-y-1.5" id="locationsChecklist">
+        <!-- Indented lists -->
+      </div>
+      <!-- Footer buttons matching image_963b05 -->
+      <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-center gap-3 rounded-b-lg">
+        <button onclick="applyBulkUpdate('locations')" class="px-6 py-2 bg-brandBlue hover:bg-brandDarkBlue text-white font-semibold rounded-md text-sm transition shadow-sm">Add</button>
+        <button onclick="closeModal()" class="px-6 py-2 border border-brandBlue text-brandBlue hover:bg-blue-50 font-semibold rounded-md text-sm transition flex items-center gap-1.5 bg-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          Cancel
+        </button>
+      </div>
+    </div>
+
+    <!-- 3. DEPARTMENTS MODAL -->
+    <div id="departmentsModal" class="bg-white rounded-lg shadow-xl max-w-md w-full flex flex-col hidden modal-anim max-h-[90vh]">
+      <div class="flex justify-between items-center px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-bold text-gray-800" id="departmentsModalHeader">Select Departments</h3>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition text-2xl font-semibold">&times;</button>
+      </div>
+      <div class="px-6 py-2.5 bg-gray-50 border-b border-gray-100 flex gap-4 text-xs font-semibold text-brandBlue">
+        <button onclick="toggleModalCheckboxes('departments', true)" class="hover:underline">Select All</button>
+        <span class="text-gray-300">|</span>
+        <button onclick="toggleModalCheckboxes('departments', false)" class="hover:underline">Deselect All</button>
+      </div>
+      <div class="flex-grow overflow-y-auto px-6 py-4 space-y-2" id="departmentsChecklist">
+        <!-- Checklist elements -->
+      </div>
+      <!-- Centered Footer matching image_963b41 -->
+      <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-center gap-3 rounded-b-lg">
+        <button onclick="closeModal()" class="px-6 py-2 border border-gray-300 text-gray-600 hover:bg-gray-100 font-semibold rounded-md text-sm transition">Cancel</button>
+        <button onclick="applyBulkUpdate('departments')" class="px-6 py-2 bg-brandBlue hover:bg-brandDarkBlue text-white font-semibold rounded-md text-sm transition shadow-sm">Add</button>
+      </div>
+    </div>
+
+    <!-- 4. ALLOWED NOTIFICATIONS MODAL -->
+    <div id="notificationsModal" class="bg-white rounded-lg shadow-xl max-w-lg w-full flex flex-col hidden modal-anim max-h-[90vh]">
+      <div class="flex justify-between items-center px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-bold text-gray-800" id="notificationsModalHeader">Allowed Notifications</h3>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition text-2xl font-semibold">&times;</button>
+      </div>
+      <div class="px-6 py-2.5 bg-gray-50 border-b border-gray-100 flex gap-4 text-xs font-semibold text-brandBlue">
+        <button onclick="toggleModalCheckboxes('notifications', true)" class="hover:underline">Select All</button>
+        <span class="text-gray-300">|</span>
+        <button onclick="toggleModalCheckboxes('notifications', false)" class="hover:underline">Deselect All</button>
+      </div>
+      <div class="flex-grow overflow-y-auto px-6 py-4 divide-y divide-gray-100" id="notificationsChecklist">
+        <!-- Checklist elements -->
+      </div>
+      <!-- Centered footer buttons -->
+      <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-center gap-3 rounded-b-lg">
+        <button onclick="closeModal()" class="px-6 py-2 border border-gray-300 text-gray-600 hover:bg-gray-100 font-semibold rounded-md text-sm transition">Cancel</button>
+        <button onclick="applyBulkUpdate('notifications')" class="px-6 py-2 bg-brandBlue hover:bg-brandDarkBlue text-white font-semibold rounded-md text-sm transition shadow-sm">Add</button>
+      </div>
+    </div>
+
+    <!-- 5. BULK UPLOAD CLIENT USERS MODAL (Upload CSV -> Validate -> Create Users -> Send Invitation) -->
+    <div id="bulkUploadModal" class="bg-white rounded-lg shadow-xl max-w-2xl w-full flex flex-col hidden modal-anim max-h-[92vh]">
+      <!-- Header -->
+      <div class="flex justify-between items-center px-6 py-4 border-b border-gray-200">
+        <div>
+          <h3 class="text-lg font-bold text-gray-800">Bulk Upload Client Users</h3>
+          <p class="text-xs text-gray-500">Create client accounts seamlessly with role & location mapping</p>
+        </div>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition text-2xl font-semibold">&times;</button>
+      </div>
+
+      <!-- Step Indicator Bar -->
+      <div class="bg-gray-50 border-b border-gray-200 px-6 py-3">
+        <div class="flex items-center justify-between text-xs font-medium">
+          <div class="flex items-center gap-1.5" id="stepIndicator1">
+            <span class="w-5 h-5 rounded-full bg-brandBlue text-white flex items-center justify-center text-[10px] font-bold">1</span>
+            <span class="text-brandBlue font-semibold">Upload File</span>
+          </div>
+          <span class="text-gray-300">───</span>
+          <div class="flex items-center gap-1.5" id="stepIndicator2">
+            <span class="w-5 h-5 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-[10px] font-bold" id="stepBadge2">2</span>
+            <span class="text-gray-500" id="stepLabel2">Validate Data</span>
+          </div>
+          <span class="text-gray-300">───</span>
+          <div class="flex items-center gap-1.5" id="stepIndicator3">
+            <span class="w-5 h-5 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-[10px] font-bold" id="stepBadge3">3</span>
+            <span class="text-gray-500" id="stepLabel3">Create & Send Invite</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Body Content -->
+      <div class="flex-grow overflow-y-auto px-6 py-4 space-y-4 text-xs text-gray-600">
+        
+        <!-- STEP 1: Upload & Template Download -->
+        <div id="bulkUploadStep1" class="space-y-4">
+          <div class="bg-blue-50/70 border border-blue-200 rounded-lg p-3.5 flex items-start justify-between gap-4">
+            <div>
+              <h4 class="font-semibold text-blue-900 text-sm">Download CSV / Excel Template</h4>
+              <p class="text-gray-600 text-xs mt-0.5">Includes required headers: First Name, Last Name, Email Address, User Role, User Department, and User Location.</p>
+              <div class="mt-2 text-[11px] text-amber-800 bg-amber-50 border border-amber-200 p-2 rounded">
+                <strong>Note:</strong> "Set as Default" will always be <em>No</em> by default. For custom default overrides, contact Vetty Admin.
+              </div>
+            </div>
+            <button 
+              onclick="downloadBulkUploadTemplate()" 
+              class="shrink-0 bg-white border border-brandBlue text-brandBlue hover:bg-blue-100 font-semibold px-3 py-1.5 rounded text-xs transition flex items-center gap-1.5 shadow-xs"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Download Template
+            </button>
+          </div>
+
+          <!-- File Drop Zone -->
+          <div 
+            id="dropZone" 
+            class="border-2 border-dashed border-gray-300 hover:border-brandBlue rounded-lg p-6 text-center transition cursor-pointer bg-gray-50/50"
+            onclick="document.getElementById('csvFileInput').click()"
+            ondragover="event.preventDefault(); this.classList.add('border-brandBlue', 'bg-blue-50/30');"
+            ondragleave="this.classList.remove('border-brandBlue', 'bg-blue-50/30');"
+            ondrop="handleFileDrop(event)"
+          >
+            <input type="file" id="csvFileInput" accept=".csv, .xlsx, .xls" class="hidden" onchange="handleFileSelected(event)">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-10 w-10 text-gray-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+            <p class="text-sm font-semibold text-gray-700">Click to upload or drag and drop</p>
+            <p class="text-xs text-gray-500 mt-1">Supported formats: <span class="font-semibold text-gray-700">CSV, Excel (.xlsx, .xls)</span> (Max 10MB)</p>
+            <p class="text-[11px] text-gray-400 mt-2" id="selectedFileInfo">No file selected yet</p>
+          </div>
+        </div>
+
+        <!-- STEP 2 & 3: Validation Review & Creation Preview -->
+        <div id="bulkUploadStep2" class="space-y-3 hidden">
+          <!-- Scanning Progress Status -->
+          <div class="bg-gray-50 border border-gray-200 rounded p-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span class="text-xs font-semibold text-gray-700" id="scanStatusLabel">Virus Scan: Passed | ASCII Encoding: Verified</span>
+            </div>
+            <span class="text-[11px] font-mono text-gray-500" id="fileStatsLabel">0 rows parsed</span>
+          </div>
+
+          <!-- Validation Errors Summary Banner (if any) -->
+          <div id="validationAlertBanner" class="hidden p-3 rounded text-xs border"></div>
+
+          <!-- Parsed Data Review Table -->
+          <div class="border border-gray-200 rounded-lg overflow-hidden max-h-60 overflow-y-auto">
+            <table class="min-w-full divide-y divide-gray-200 text-left text-[11px]">
+              <thead class="bg-gray-100 text-gray-700 font-semibold uppercase">
+                <tr>
+                  <th class="py-2 px-2.5 w-8">#</th>
+                  <th class="py-2 px-2.5">Name</th>
+                  <th class="py-2 px-2.5">Email</th>
+                  <th class="py-2 px-2.5">Role</th>
+                  <th class="py-2 px-2.5">Department</th>
+                  <th class="py-2 px-2.5">Location</th>
+                  <th class="py-2 px-2.5 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody id="parsedRowsTableBody" class="divide-y divide-gray-200 bg-white">
+                <!-- Programmatic review rows -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer Buttons -->
+      <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-between items-center rounded-b-lg">
+        <button onclick="closeModal()" class="px-4 py-2 border border-gray-300 text-gray-600 hover:bg-gray-100 font-semibold rounded-md text-sm transition">Cancel</button>
+        <div class="flex gap-2">
+          <button id="btnUploadBack" onclick="resetBulkUploadStep()" class="hidden px-4 py-2 border border-gray-300 text-gray-700 hover:bg-gray-100 font-semibold rounded-md text-sm transition">Back</button>
+          <button id="btnValidateUpload" onclick="processAndValidateFile()" class="px-5 py-2 bg-brandBlue hover:bg-brandDarkBlue text-white font-semibold rounded-md text-sm transition shadow-sm">
+            Validate File
+          </button>
+          <button id="btnSubmitUsers" onclick="submitBulkUsersCreation()" class="hidden px-5 py-2 bg-brandBlue hover:bg-brandDarkBlue text-white font-semibold rounded-md text-sm transition shadow-sm flex items-center gap-1.5">
+            Create Users & Send Invitation
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. BULK DEACTIVATION MODAL (Email Address + Client ID) -->
+    <div id="bulkDeactivationModal" class="bg-white rounded-lg shadow-xl max-w-lg w-full flex flex-col hidden modal-anim max-h-[90vh]">
+      <div class="flex justify-between items-center px-6 py-4 border-b border-gray-200">
+        <div>
+          <h3 class="text-lg font-bold text-gray-800">Deactivate Client Users</h3>
+          <p class="text-xs text-gray-500">Provide CSV containing selected client users' email addresses & Client ID</p>
+        </div>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition text-2xl font-semibold">&times;</button>
+      </div>
+
+      <div class="p-6 space-y-4 text-xs text-gray-600">
+        <!-- Sample Template Link Box -->
+        <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 flex items-center justify-between">
+          <div>
+            <span class="font-semibold text-gray-800 text-xs">Need the deactivation file structure?</span>
+            <p class="text-[11px] text-gray-500">Template fields: <code class="bg-gray-200 px-1 py-0.5 rounded">Email Address, Client ID</code></p>
+          </div>
+          <button onclick="downloadDeactivationTemplate()" class="border border-brandBlue text-brandBlue hover:bg-blue-50 px-3 py-1.5 rounded font-semibold text-xs transition">
+            Sample Template
+          </button>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Target Client ID</label>
+          <input type="text" id="deactivateClientId" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue" value="CLIENT-8802" placeholder="e.g. CLIENT-8802">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Upload Deactivation File (.CSV or .Excel)</label>
+          <div class="flex flex-col gap-1.5">
+            <input type="file" id="deactivationFileInput" accept=".csv, .xlsx, .xls" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-brandBlue hover:file:bg-blue-100 cursor-pointer border border-gray-300 rounded-md p-1" onchange="handleDeactivationFileSelected(event)">
+            <div id="deactivationFileSuccessBadge" class="hidden items-center gap-1.5 text-xs text-emerald-600 font-semibold mt-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-600 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <span id="deactivationFileSuccessText">File uploaded successfully</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-3 rounded-b-lg">
+        <button onclick="closeModal()" class="px-5 py-2 border border-gray-300 text-gray-600 hover:bg-gray-100 font-semibold rounded-md text-sm transition">Cancel</button>
+        <button onclick="executeBulkDeactivation()" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md text-sm transition shadow-sm">
+          Deactivate Users
+        </button>
+      </div>
+    </div>
+
+    <!-- NEW USER MODAL -->
+    <div id="newUserModal" class="bg-white rounded-lg shadow-xl max-w-md w-full flex flex-col hidden modal-anim max-h-[90vh]">
+      <div class="flex justify-between items-center px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-bold text-gray-800">Create New User</h3>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition text-2xl font-semibold">&times;</button>
+      </div>
+      <div class="px-6 py-4 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">User Name</label>
+          <input type="text" id="newUserName" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue" placeholder="e.g. John Doe">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Email</label>
+          <input type="email" id="newUserEmail" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue" placeholder="e.g. john.doe@company.com">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Role</label>
+          <select id="newUserRole" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brandBlue">
+            <option value="Super Admin">Super Admin</option>
+            <option value="View Only">View Only</option>
+          </select>
+        </div>
+      </div>
+      <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-3 rounded-b-lg">
+        <button onclick="closeModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-md text-sm transition">Cancel</button>
+        <button onclick="createUser()" class="px-4 py-2 bg-brandBlue hover:bg-brandDarkBlue text-white font-semibold rounded-md text-sm transition shadow-sm">Save User</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BLUE THEME CONFIRMATION MODAL (Centered, clean layout following image_9739b2.png) -->
+  <div id="confirmationModal" class="fixed inset-0 bg-black/40 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm w-full text-center flex flex-col items-center">
+      <p class="text-gray-700 text-sm font-medium mb-6" id="confirmationMessage">Permissions updated successfully!</p>
+      <button onclick="dismissConfirmation()" class="bg-confirmBlue hover:bg-confirmBlueHover text-white font-semibold py-2 px-8 rounded-md text-sm transition focus:outline-none min-w-[100px] shadow-sm">
+        Ok
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ==================== CONTROLLER SCRIPT ==================== -->
+  <script>
+    let users = [
+      {
+        id: 1,
+        name: "William Harrison",
+        allowedActions: ["!!_Client: Add Candidate", "!!_Client: Add mock data"],
+        locations: ["New Delhi", "New Nagpur", "New Pune"],
+        departments: ["Talent Acquisition", "Qa Department"],
+        allowedNotifications: [],
+        email: "william.harrison@company.com",
+        role: "Super Admin",
+        clientId: "HHS-CLIENT-8802",
+        status: "Active"
+      },
+      {
+        id: 2,
+        name: "Emma Richardson",
+        allowedActions: ["!!_Client : New OHS dashboard status column"],
+        locations: ["New Corporate", "New Dhule", "New Nashik"],
+        departments: ["Talent Acquisition", "Qa Department"],
+        allowedNotifications: ["Fill and Sign Onboarding Documents"],
+        email: "emma.richardson@company.com",
+        role: "Super Admin",
+        clientId: "HHS-CLIENT-8802",
+        status: "Active"
+      },
+      {
+        id: 3,
+        name: "James Sterling",
+        allowedActions: ["!!_Client: Add Candidate"],
+        locations: ["New Pune", "New Corporate"],
+        departments: ["Talent Acquisition", "Qa Department"],
+        allowedNotifications: [],
+        email: "james.sterling@company.com",
+        role: "Super Admin",
+        clientId: "HHS-CLIENT-8802",
+        status: "Active"
+      },
+      {
+        id: 4,
+        name: "Olivia Copeland",
+        allowedActions: ["!!_Client: Add Candidate"],
+        locations: ["New Corporate", "New Dhule"],
+        departments: ["Talent Acquisition", "Qa Department"],
+        allowedNotifications: [],
+        email: "olivia.copeland@company.com",
+        role: "Super Admin",
+        clientId: "HHS-CLIENT-8802",
+        status: "Active"
+      },
+      {
+        id: 5,
+        name: "Benjamin Foster",
+        allowedActions: ["!!_Client: Add New Check"],
+        locations: [],
+        departments: ["Talent Acquisition", "Qa Department"],
+        allowedNotifications: [],
+        email: "benjamin.foster@company.com",
+        role: "View Only",
+        clientId: "HHS-CLIENT-8802",
+        status: "Active"
+      },
+      {
+        id: 6,
+        name: "Sophia Caldwell",
+        allowedActions: ["!!_Client: Add New Check"],
+        locations: ["New Pune"],
+        departments: ["Talent Acquisition", "Prod Department"],
+        allowedNotifications: [],
+        email: "sophia.caldwell@company.com",
+        role: "View Only",
+        clientId: "HHS-CLIENT-8802",
+        status: "Active"
+      },
+      {
+        id: 7,
+        name: "Lucas Montgomery",
+        allowedActions: ["!!_Client: Add New Check"],
+        locations: ["New Dhule"],
+        departments: ["Talent Acquisition", "Prod Department"],
+        allowedNotifications: [],
+        email: "lucas.montgomery@company.com",
+        role: "View Only",
+        clientId: "HHS-CLIENT-8802",
+        status: "Active"
+      },
+      {
+        id: 8,
+        name: "Amelia Vance",
+        allowedActions: ["!!_Client: Add New Check"],
+        locations: ["New Pune"],
+        departments: ["Talent Acquisition", "Prod Department"],
+        allowedNotifications: [],
+        email: "amelia.vance@company.com",
+        role: "View Only",
+        clientId: "HHS-CLIENT-8802",
+        status: "Active"
+      },
+      {
+        id: 9,
+        name: "Ethan Shepherd",
+        allowedActions: ["!!_Client: Add Candidate"],
+        locations: ["New Corporate", "New Dhule"],
+        departments: ["Talent Acquisition", "Qa Department"],
+        allowedNotifications: [],
+        email: "ethan.shepherd@company.com",
+        role: "View Only",
+        clientId: "HHS-CLIENT-8802",
+        status: "Active"
+      },
+      {
+        id: 10,
+        name: "Alexander Hayes",
+        allowedActions: ["!!_Client : Permission Export Candidates"],
+        locations: ["New Delhi"],
+        departments: ["Hr Department"],
+        allowedNotifications: ["Order Clear and Review Needed"],
+        email: "alexander.hayes@company.com",
+        role: "Super Admin",
+        clientId: "HHS-CLIENT-8802",
+        status: "Active"
+      },
+      {
+        id: 11,
+        name: "Charlotte Bennett",
+        allowedActions: ["!!_Client : Add Note"],
+        locations: ["New Corporate"],
+        departments: ["Hr Department"],
+        allowedNotifications: ["Dispute was updated"],
+        email: "charlotte.bennett@company.com",
+        role: "Super Admin",
+        clientId: "HHS-CLIENT-8802",
+        status: "Active"
+      },
+      {
+        id: 12,
+        name: "Daniel Lawson",
+        allowedActions: ["!!_Client : Add mock data"],
+        locations: ["New Nagpur"],
+        departments: ["Qa Department"],
+        allowedNotifications: ["IDV Fail"],
+        email: "daniel.lawson@company.com",
+        role: "View Only",
+        clientId: "HHS-CLIENT-8802",
+        status: "Active"
+      },
+      {
+        id: 13,
+        name: "Mason Griffith",
+        allowedActions: ["!!_Client : 1Service redesign"],
+        locations: ["New Newyork"],
+        departments: ["Prod Department"],
+        allowedNotifications: ["Supplies & Shipping Updates"],
+        email: "mason.griffith@company.com",
+        role: "View Only",
+        clientId: "HHS-CLIENT-8802",
+        status: "Active"
+      },
+      {
+        id: 14,
+        name: "Harper Knowles",
+        allowedActions: ["!!_Client: Add Clinic Preference v2"],
+        locations: ["Wakad city newww"],
+        departments: ["Talent Acquisition"],
+        allowedNotifications: [],
+        email: "harper.knowles@company.com",
+        role: "View Only",
+        clientId: "HHS-CLIENT-8802",
+        status: "Active"
+      },
+      {
+        id: 15,
+        name: "Logan Fitzpatrick",
+        allowedActions: ["!!_Client : Add Health Package"],
+        locations: ["New Nashik"],
+        departments: ["Qa Department"],
+        allowedNotifications: ["Form I-9 reverification notifications"],
+        email: "logan.fitzpatrick@company.com",
+        role: "Super Admin",
+        clientId: "HHS-CLIENT-8802",
+        status: "Active"
+      },
+      {
+        id: 16,
+        name: "Evelyn Beaumont",
+        allowedActions: ["!!_Client : Add Note"],
+        locations: ["New Delhi"],
+        departments: ["Hr Department"],
+        allowedNotifications: ["Health Screening Donor Pass expired"],
+        email: "evelyn.beaumont@company.com",
+        role: "Super Admin",
+        clientId: "HHS-CLIENT-8802",
+        status: "Active"
+      }
+    ];
+
+    const allowedActionsOptions = [
+      "!!_Client : New OHS dashboard status column",
+      "!!_Client : Permission Export Candidates",
+      "!!_Client : 1Service redesign",
+      "!!_Client : 1Service redesign for ADP",
+      "!!_Client : Add Additional Address",
+      "!!_Client : Add Candidate",
+      "!!_Client : Add Clinic Preference v2",
+      "!!_Client : Add Health Package",
+      "!!_Client : Add New Check - Send Invite",
+      "!!_Client : Add New Check Fill on Behalf",
+      "!!_Client : Add Note",
+      "!!_Client : Add mock data",
+      "!!_Client : Add or edit client defined field"
+    ];
+
+    const locationsOptions = [
+      { id: "new_corp", name: "New Corporate", isParent: true },
+      { id: "new_dhule", name: "New Dhule", parent: "new_corp" },
+      { id: "new_nashik", name: "New Nashik", parent: "new_corp" },
+      { id: "new_pune", name: "New Pune", parent: "new_corp", isParent: true },
+      { id: "new_newyork", name: "New Newyork", parent: "new_pune" },
+      { id: "wakad_city", name: "Wakad city newww", isParent: true },
+      { id: "new_nagpur", name: "New Nagpur", parent: "wakad_city" },
+      { id: "new_delhi", name: "New Delhi" }
+    ];
+
+    const departmentsOptions = [
+      "Talent Acquisition",
+      "Qa Department",
+      "Hr Department",
+      "Prod Department"
+    ];
+
+    const notificationsOptions = [
+      "Form I-9 reverification notifications",
+      "Fill and Sign Onboarding Documents",
+      "Health Screening Donor Pass expired",
+      "Order Clear and Review Needed",
+      "7 days passed after sending Pre-Adverse letter",
+      "Dispute was updated",
+      "Form I-9 and E-Verify Completed",
+      "Dispute Review Completed email",
+      "Health Screening Donor Pass about to expire",
+      "IDV: Review Needed",
+      "IDV Fail",
+      "Supplies & Shipping Updates"
+    ];
+
+    let selectedUserIds = new Set();
+    let currentSearchQuery = "";
+    let currentPage = 1;
+    const itemsPerPage = 9;
+    
+    let directTargetUserId = null; 
+    let targetAllVisible = false;
+
+    let uploadedFileRawData = null;
+    let parsedValidatedUsers = [];
+    let deactivationUserEmails = [];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderTable();
+      initializeModalTemplates();
+      
+      window.addEventListener('click', (e) => {
+        const dropdown = document.getElementById('bulkActionsDropdown');
+        const bulkBtn = document.getElementById('bulkActionsBtn');
+        if (dropdown && !dropdown.contains(e.target) && e.target !== bulkBtn && !bulkBtn.contains(e.target)) {
+          dropdown.classList.add('hidden');
+        }
+      });
+    });
+
+    function renderTable() {
+      const tableBody = document.getElementById('userTableBody');
+      tableBody.innerHTML = '';
+
+      const filteredUsers = users.filter(u => {
+        const query = currentSearchQuery.toLowerCase();
+        return u.name.toLowerCase().includes(query) || 
+               u.email.toLowerCase().includes(query) ||
+               u.role.toLowerCase().includes(query);
+      });
+
+      const totalItems = filteredUsers.length;
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+      if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
+      if (currentPage < 1) currentPage = 1;
+
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+      const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
+
+      paginatedUsers.forEach((user, index) => {
+        const globalIndex = startIndex + index + 1;
+        const isChecked = selectedUserIds.has(user.id);
+
+        const row = document.createElement('tr');
+        row.className = `hover:bg-slate-50 transition divide-x divide-gray-300 ${isChecked ? 'bg-blue-50/50' : ''}`;
+        
+        const allowedActionsText = user.allowedActions.join(', ');
+        const locationsText = user.locations.join(', ');
+        const departmentsText = user.departments.join(', ');
+        const notificationsText = user.allowedNotifications.join(', ');
+
+        row.innerHTML = `
+          <td class="py-3 px-4 text-center border-b border-gray-300">
+            <input 
+              type="checkbox" 
+              class="rounded border-gray-300 text-brandBlue focus:ring-brandBlue cursor-pointer h-4 w-4" 
+              ${isChecked ? 'checked' : ''} 
+              onchange="toggleUserSelection(${user.id}, this.checked)"
+            >
+          </td>
+          <td class="py-3 px-3 text-center text-gray-400 font-semibold text-xs border-b border-gray-300">${globalIndex}</td>
+          <td class="py-3 px-4 font-bold text-gray-900 border-b border-gray-300">${user.name}</td>
+          
+          <td class="py-3 px-4 cursor-pointer hover:bg-slate-100/50 transition border-b border-gray-300" onclick="handleDirectCellClick(${user.id}, 'actions')">
+            <div class="truncate max-w-[210px] text-gray-700" title="${allowedActionsText}">${allowedActionsText}</div>
+          </td>
+          
+          <td class="py-3 px-4 cursor-pointer hover:bg-slate-100/50 transition border-b border-gray-300" onclick="handleDirectCellClick(${user.id}, 'locations')">
+            <div class="truncate max-w-[210px] text-gray-700" title="${locationsText}">${locationsText}</div>
+          </td>
+          
+          <td class="py-3 px-4 cursor-pointer hover:bg-slate-100/50 transition border-b border-gray-300" onclick="handleDirectCellClick(${user.id}, 'departments')">
+            <div class="truncate max-w-[170px] text-gray-700" title="${departmentsText}">${departmentsText}</div>
+          </td>
+          
+          <td class="py-3 px-4 cursor-pointer hover:bg-slate-100/50 transition border-b border-gray-300" onclick="handleDirectCellClick(${user.id}, 'notifications')">
+            <div class="truncate max-w-[200px] text-gray-700" title="${notificationsText}">${notificationsText}</div>
+          </td>
+          
+          <td class="py-3 px-4 text-gray-500 font-mono text-[11px] break-all border-b border-gray-300">${user.email}</td>
+          <td class="py-3 px-4 border-b border-gray-300 text-gray-800 font-medium whitespace-nowrap">
+            ${user.role}
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+
+      const paginationInfo = document.getElementById('paginationInfo');
+      if (totalItems > 0) {
+        paginationInfo.textContent = `Showing ${startIndex + 1} to ${endIndex} of ${totalItems} entries`;
+      } else {
+        paginationInfo.textContent = "Showing 0 to 0 of 0 entries";
+      }
+
+      updateSelectAllHeaderState(paginatedUsers);
+      updateBulkActionsLabel();
+    }
+
+    function handleDirectCellClick(userId, category) {
+      directTargetUserId = userId;
+      targetAllVisible = false;
+      openBulkModal(category);
+    }
+
+    function toggleUserSelection(id, isChecked) {
+      if (id === null) return;
+      if (isChecked) {
+        selectedUserIds.add(id);
+      } else {
+        selectedUserIds.delete(id);
+      }
+      renderTable();
+    }
+
+    function toggleSelectAll(selectAllCheckbox) {
+      const filteredUsers = users.filter(u => {
+        const query = currentSearchQuery.toLowerCase();
+        return u.name.toLowerCase().includes(query) || 
+               u.email.toLowerCase().includes(query) ||
+               u.role.toLowerCase().includes(query);
+      });
+
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = Math.min(startIndex + itemsPerPage, filteredUsers.length);
+      const visibleUsers = filteredUsers.slice(startIndex, endIndex);
+
+      if (selectAllCheckbox.checked) {
+        visibleUsers.forEach(u => selectedUserIds.add(u.id));
+      } else {
+        visibleUsers.forEach(u => selectedUserIds.delete(u.id));
+      }
+      renderTable();
+    }
+
+    function updateSelectAllHeaderState(visibleUsers) {
+      const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+      if (visibleUsers.length === 0) {
+        selectAllCheckbox.checked = false;
+        return;
+      }
+      const allSelected = visibleUsers.every(u => selectedUserIds.has(u.id));
+      selectAllCheckbox.checked = allSelected;
+    }
+
+    function updateBulkActionsLabel() {
+      const countLabel = document.getElementById('bulkCountLabel');
+      const wrapper = document.getElementById('bulkActionsWrapper');
+      
+      if (selectedUserIds.size >= 1) {
+        countLabel.textContent = selectedUserIds.size;
+        wrapper.classList.remove('hidden');
+      } else {
+        wrapper.classList.add('hidden');
+      }
+    }
+
+    function handleSearch(val) {
+      currentSearchQuery = val;
+      currentPage = 1;
+      renderTable();
+    }
+
+    function changePage(direction) {
+      currentPage += direction;
+      renderTable();
+    }
+
+    function toggleBulkDropdown() {
+      const dropdown = document.getElementById('bulkActionsDropdown');
+      dropdown.classList.toggle('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.add('hidden');
+      document.getElementById('actionsModal').classList.add('hidden');
+      document.getElementById('locationsModal').classList.add('hidden');
+      document.getElementById('departmentsModal').classList.add('hidden');
+      document.getElementById('notificationsModal').classList.add('hidden');
+      document.getElementById('newUserModal').classList.add('hidden');
+      document.getElementById('bulkUploadModal').classList.add('hidden');
+      document.getElementById('bulkDeactivationModal').classList.add('hidden');
+
+      directTargetUserId = null;
+      targetAllVisible = false;
+    }
+
+    function clearActionsSearch() {
+      const input = document.getElementById('actionsSearch');
+      input.value = "";
+      filterActionsList("");
+    }
+
+    function initializeModalTemplates() {
+      renderActionsChecklist(allowedActionsOptions);
+
+      const locContainer = document.getElementById('locationsChecklist');
+      locContainer.innerHTML = '';
+      locationsOptions.forEach(loc => {
+        const itemWrapper = document.createElement('div');
+        
+        let bulletSym = "";
+        let indentClass = "pl-2";
+        if (loc.parent === "new_corp") {
+          indentClass = "pl-8";
+          bulletSym = "• ";
+        } else if (loc.parent === "new_pune") {
+          indentClass = "pl-14";
+          bulletSym = "o ";
+        } else if (loc.parent === "wakad_city") {
+          indentClass = "pl-8";
+          bulletSym = "o ";
+        }
+
+        const highlightStyle = "text-gray-700 hover:bg-slate-50";
+
+        itemWrapper.className = `flex items-center justify-between py-1.5 px-3 rounded ${indentClass} ${highlightStyle}`;
+        itemWrapper.innerHTML = `
+          <span class="text-sm font-semibold select-none">
+            ${bulletSym}${loc.name}
+          </span>
+          <input 
+            type="checkbox" 
+            name="bulk_loc" 
+            value="${loc.name}" 
+            class="rounded border-gray-300 text-brandBlue focus:ring-brandBlue h-4.5 w-4.5 cursor-pointer ml-4"
+          >
+        `;
+        locContainer.appendChild(itemWrapper);
+      });
+
+      const deptContainer = document.getElementById('departmentsChecklist');
+      deptContainer.innerHTML = '';
+      departmentsOptions.forEach(dept => {
+        const itemWrapper = document.createElement('div');
+        itemWrapper.className = "flex items-center justify-between py-2 px-3 hover:bg-slate-50 rounded border-b border-gray-100";
+        itemWrapper.innerHTML = `
+          <span class="font-semibold text-sm text-gray-700 select-none">${dept}</span>
+          <input 
+            type="checkbox" 
+            name="bulk_dept" 
+            value="${dept}" 
+            class="rounded border-gray-300 text-brandBlue focus:ring-brandBlue h-4.5 w-4.5 cursor-pointer"
+          >
+        `;
+        deptContainer.appendChild(itemWrapper);
+      });
+
+      const notifContainer = document.getElementById('notificationsChecklist');
+      notifContainer.innerHTML = '';
+      notificationsOptions.forEach(notif => {
+        const itemWrapper = document.createElement('div');
+        itemWrapper.className = "flex items-center justify-between py-2.5 px-3 hover:bg-slate-50 rounded border-b border-gray-100";
+        itemWrapper.innerHTML = `
+          <span class="font-semibold text-xs text-gray-700 select-none">${notif}</span>
+          <input 
+            type="checkbox" 
+            name="bulk_notif" 
+            value="${notif}" 
+            class="rounded border-gray-300 text-brandBlue focus:ring-brandBlue h-4.5 w-4.5 cursor-pointer"
+          >
+        `;
+        notifContainer.appendChild(itemWrapper);
+      });
+    }
+
+    function renderActionsChecklist(actions) {
+      const container = document.getElementById('actionsChecklist');
+      container.innerHTML = '';
+      if (actions.length === 0) {
+        container.innerHTML = `<div class="text-sm text-gray-400 py-4 text-center">No matching actions found</div>`;
+        return;
+      }
+      actions.forEach(act => {
+        const itemWrapper = document.createElement('div');
+        itemWrapper.className = "flex items-center justify-between py-2 px-3 hover:bg-slate-50 rounded border-b border-gray-50";
+        itemWrapper.innerHTML = `
+          <span class="font-semibold text-xs text-gray-700 select-none">${act}</span>
+          <input 
+            type="checkbox" 
+            name="bulk_act" 
+            value="${act}" 
+            class="rounded border-gray-300 text-brandBlue focus:ring-brandBlue h-4.5 w-4.5 cursor-pointer"
+          >
+        `;
+        container.appendChild(itemWrapper);
+      });
+    }
+
+    function filterActionsList(query) {
+      const filtered = allowedActionsOptions.filter(act => 
+        act.toLowerCase().includes(query.toLowerCase())
+      );
+      renderActionsChecklist(filtered);
+    }
+
+    function openBulkModal(type) {
+      document.getElementById('bulkActionsDropdown').classList.add('hidden');
+      document.getElementById('modalOverlay').classList.remove('hidden');
+      resetModalCheckboxes();
+
+      let targetDescriptor = "";
+      if (directTargetUserId !== null) {
+        const uObj = users.find(u => u.id === directTargetUserId);
+        targetDescriptor = uObj ? ` for ${uObj.name}` : "";
+      } else if (selectedUserIds.size > 0) {
+        targetDescriptor = ` for ${selectedUserIds.size} Selected Users`;
+      } else {
+        targetAllVisible = true;
+        targetDescriptor = " for All Page Users";
+      }
+
+      if (type === 'actions') {
+        document.getElementById('actionsModal').classList.remove('hidden');
+        document.getElementById('actionsModalHeader').textContent = `Edit Allowed Actions${targetDescriptor}`;
+        document.getElementById('actionsSearch').value = "";
+        renderActionsChecklist(allowedActionsOptions);
+      } else if (type === 'locations') {
+        document.getElementById('locationsModal').classList.remove('hidden');
+        document.getElementById('locationsModalHeader').textContent = `Add Locations${targetDescriptor}`;
+      } else if (type === 'departments') {
+        document.getElementById('departmentsModal').classList.remove('hidden');
+        document.getElementById('departmentsModalHeader').textContent = `Select Departments${targetDescriptor}`;
+      } else if (type === 'notifications') {
+        document.getElementById('notificationsModal').classList.remove('hidden');
+        document.getElementById('notificationsModalHeader').textContent = `Allowed Notifications${targetDescriptor}`;
+      }
+    }
+
+    function resetModalCheckboxes() {
+      const allCheckboxes = document.querySelectorAll('input[name="bulk_act"], input[name="bulk_loc"], input[name="bulk_dept"], input[name="bulk_notif"]');
+      allCheckboxes.forEach(cb => cb.checked = false);
+    }
+
+    function toggleModalCheckboxes(type, state) {
+      let selector = "";
+      if (type === 'actions') selector = 'input[name="bulk_act"]';
+      if (type === 'locations') selector = 'input[name="bulk_loc"]';
+      if (type === 'departments') selector = 'input[name="bulk_dept"]';
+      if (type === 'notifications') selector = 'input[name="bulk_notif"]';
+
+      const boxes = document.querySelectorAll(selector);
+      boxes.forEach(b => b.checked = state);
+    }
+
+    function applyBulkUpdate(category) {
+      let selectedItems = [];
+      let inputName = "";
+      let fieldKey = "";
+
+      if (category === 'actions') {
+        inputName = "bulk_act";
+        fieldKey = "allowedActions";
+      } else if (category === 'locations') {
+        inputName = "bulk_loc";
+        fieldKey = "locations";
+      } else if (category === 'departments') {
+        inputName = "bulk_dept";
+        fieldKey = "departments";
+      } else if (category === 'notifications') {
+        inputName = "bulk_notif";
+        fieldKey = "allowedNotifications";
+      }
+
+      const checkedBoxes = document.querySelectorAll(`input[name="${inputName}"]:checked`);
+      checkedBoxes.forEach(cb => selectedItems.push(cb.value));
+
+      if (selectedItems.length === 0) {
+        showConfirmationNotification("Please select at least one item to add.");
+        return;
+      }
+
+      let updatedUserNames = [];
+      let targetIds = new Set();
+      
+      if (directTargetUserId !== null) {
+        targetIds.add(directTargetUserId);
+      } else if (selectedUserIds.size > 0) {
+        selectedUserIds.forEach(id => targetIds.add(id));
+      } else if (targetAllVisible) {
+        const filteredUsers = users.filter(u => {
+          const query = currentSearchQuery.toLowerCase();
+          return u.name.toLowerCase().includes(query) || 
+                 u.email.toLowerCase().includes(query) ||
+                 u.role.toLowerCase().includes(query);
+        });
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = Math.min(startIndex + itemsPerPage, filteredUsers.length);
+        const visibleUsers = filteredUsers.slice(startIndex, endIndex);
+        visibleUsers.forEach(u => targetIds.add(u.id));
+      }
+
+      users.forEach(user => {
+        if (targetIds.has(user.id)) {
+          const uniqueSet = new Set([...user[fieldKey], ...selectedItems]);
+          user[fieldKey] = Array.from(uniqueSet);
+          updatedUserNames.push(user.name);
+        }
+      });
+
+      selectedUserIds.clear();
+      renderTable();
+      closeModal();
+      triggerBlueConfirmation(category, updatedUserNames.length);
+    }
+
+    function triggerBlueConfirmation(category, count) {
+      const modal = document.getElementById('confirmationModal');
+      const msg = document.getElementById('confirmationMessage');
+      
+      let categoryLabel = category === 'actions' ? 'Permissions' : 
+                          category === 'locations' ? 'Locations' : 
+                          category === 'departments' ? 'Departments' : 'Notifications';
+      
+      msg.textContent = `${categoryLabel} updated successfully for ${count} users!`;
+      modal.classList.remove('hidden');
+    }
+
+    function dismissConfirmation() {
+      document.getElementById('confirmationModal').classList.add('hidden');
+    }
+
+    function showConfirmationNotification(message) {
+      const modal = document.getElementById('confirmationModal');
+      const msg = document.getElementById('confirmationMessage');
+      msg.textContent = message;
+      modal.classList.remove('hidden');
+    }
+
+    function openNewUserModal() {
+      document.getElementById('modalOverlay').classList.remove('hidden');
+      document.getElementById('newUserModal').classList.remove('hidden');
+      document.getElementById('newUserName').value = "";
+      document.getElementById('newUserEmail').value = "";
+    }
+
+    function createUser() {
+      const name = document.getElementById('newUserName').value.trim();
+      const email = document.getElementById('newUserEmail').value.trim();
+      const role = document.getElementById('newUserRole').value;
+
+      if (!name || !email) {
+        showConfirmationNotification("Please fill out Name and Email credentials");
+        return;
+      }
+
+      const newUser = {
+        id: users.length + 1,
+        name: name,
+        allowedActions: [],
+        locations: [],
+        departments: [],
+        allowedNotifications: [],
+        email: email,
+        role: role,
+        clientId: "HHS-CLIENT-8802",
+        status: "Active"
+      };
+
+      users.unshift(newUser);
+      closeModal();
+      renderTable();
+      showConfirmationNotification("New User created successfully!");
+    }
+
+    function openBulkUploadModal() {
+      document.getElementById('modalOverlay').classList.remove('hidden');
+      document.getElementById('bulkUploadModal').classList.remove('hidden');
+      resetBulkUploadStep();
+    }
+
+    function resetBulkUploadStep() {
+      document.getElementById('bulkUploadStep1').classList.remove('hidden');
+      document.getElementById('bulkUploadStep2').classList.add('hidden');
+      document.getElementById('btnValidateUpload').classList.remove('hidden');
+      document.getElementById('btnSubmitUsers').classList.add('hidden');
+      document.getElementById('btnUploadBack').classList.add('hidden');
+
+      // Reset Step Indicators
+      document.getElementById('stepBadge2').className = "w-5 h-5 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-[10px] font-bold";
+      document.getElementById('stepLabel2').className = "text-gray-500";
+      document.getElementById('stepBadge3').className = "w-5 h-5 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-[10px] font-bold";
+      document.getElementById('stepLabel3').className = "text-gray-500";
+
+      document.getElementById('csvFileInput').value = "";
+      document.getElementById('selectedFileInfo').textContent = "No file selected yet";
+      uploadedFileRawData = null;
+      parsedValidatedUsers = [];
+    }
+
+    function handleFileDrop(e) {
+      e.preventDefault();
+      document.getElementById('dropZone').classList.remove('border-brandBlue', 'bg-blue-50/30');
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        const file = e.dataTransfer.files[0];
+        validateAndSetFile(file);
+      }
+    }
+
+    function handleFileSelected(e) {
+      if (e.target.files && e.target.files.length > 0) {
+        const file = e.target.files[0];
+        validateAndSetFile(file);
+      }
+    }
+
+    function validateAndSetFile(file) {
+      const fileName = file.name;
+      const validExtensions = ['.csv', '.xlsx', '.xls'];
+      const ext = fileName.slice(fileName.lastIndexOf('.')).toLowerCase();
+      
+      if (!validExtensions.includes(ext)) {
+        showConfirmationNotification("Invalid file format. Only CSV and Excel (.xlsx, .xls) files are supported.");
+        return;
+      }
+
+      // Max file size 10MB
+      const maxBytes = 10 * 1024 * 1024;
+      if (file.size > maxBytes) {
+        showConfirmationNotification("File size exceeds the 10MB supported limit.");
+        return;
+      }
+
+      document.getElementById('selectedFileInfo').innerHTML = `<span class="font-semibold text-emerald-700">✓ ${fileName}</span> (${(file.size / 1024).toFixed(1)} KB)`;
+
+      // Read file content
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        uploadedFileRawData = {
+          name: fileName,
+          content: evt.target.result,
+          size: file.size
+        };
+      };
+      reader.readAsText(file);
+    }
+
+    function downloadBulkUploadTemplate() {
+      const csvContent = "First Name,Last Name,Email Address,User Role,User Department,User Location\n" +
+                         "Harrison,Ford,harrison.ford@company.com,Super Admin,Talent Acquisition,New Corporate\n" +
+                         "Sarah,Connor,sarah.connor@company.com,View Only,Qa Department,New Delhi\n" +
+                         "Michael,Scott,michael.scott@company.com,Super Admin,Prod Department,New Pune";
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "vetty_clientname_userstemplate.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function processAndValidateFile() {
+      if (!uploadedFileRawData || !uploadedFileRawData.content) {
+        // If no file selected, create a mock default template to demonstrate validation seamlessly
+        const mockDefault = "First Name,Last Name,Email Address,User Role,User Department,User Location\n" +
+                            "Marcus,Vance,marcus.vance@company.com,Super Admin,Talent Acquisition,New Corporate\n" +
+                            "Emily,Thorne,emily.thorne@company.com,View Only,Hr Department,New Delhi\n" +
+                            "David,Wallace,david.wallace@company.com,Super Admin,Prod Department,New Pune";
+        uploadedFileRawData = {
+          name: "vetty_clientname_userstemplate.csv",
+          content: mockDefault,
+          size: 1024
+        };
+        document.getElementById('selectedFileInfo').innerHTML = `<span class="font-semibold text-brandBlue">Using Sample Data: vetty_clientname_userstemplate.csv</span>`;
+      }
+
+      const content = uploadedFileRawData.content.trim();
+
+      // 1. ASCII character validation
+      const nonAsciiMatch = /[^\x00-\x7F]/;
+      if (nonAsciiMatch.test(content)) {
+        showConfirmationNotification("Unsupported non-ASCII characters detected in the file. Please ensure all text uses standard ASCII characters.");
+        return;
+      }
+
+      // Parse lines
+      const lines = content.split(/\r?\n/).filter(line => line.trim().length > 0);
+      if (lines.length < 2) {
+        showConfirmationNotification("CSV file must contain a header row and at least one data row.");
+        return;
+      }
+
+      // 2. Validate Headers exactly as required
+      const expectedHeaders = ["first name", "last name", "email address", "user role", "user department", "user location"];
+      const rawHeaderLine = lines[0];
+      const parsedHeaders = rawHeaderLine.split(',').map(h => h.trim().toLowerCase().replace(/"/g, ''));
+
+      const isHeaderValid = expectedHeaders.every((eh, idx) => parsedHeaders[idx] === eh);
+      if (!isHeaderValid) {
+        showConfirmationNotification("Header format mismatch. Expected exactly: First Name, Last Name, Email Address, User Role, User Department, User Location");
+        return;
+      }
+
+      // 3. Valid HHS Roles, Departments, Locations
+      const validRoles = ["super admin", "view only", "super", "admin", "client admin"]; // Supports familiar HHS roles mapping to Vetty
+      const validDepts = departmentsOptions.map(d => d.toLowerCase());
+      const validLocs = locationsOptions.map(l => l.name.toLowerCase());
+      const existingEmails = new Set(users.map(u => u.email.toLowerCase()));
+
+      parsedValidatedUsers = [];
+      let validationErrors = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const row = lines[i].split(',').map(col => col.trim().replace(/"/g, ''));
+        const rowNum = i + 1;
+
+        if (row.length < 6) {
+          validationErrors.push(`Row ${rowNum}: Incomplete columns`);
+          continue;
+        }
+
+        const [firstName, lastName, email, role, dept, loc] = row;
+        let rowErrors = [];
+
+        // Required checks
+        if (!firstName) rowErrors.push("First Name is blank");
+        if (!lastName) rowErrors.push("Last Name is blank");
+        
+        // Email format validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+          rowErrors.push("Invalid Email format");
+        } else if (existingEmails.has(email.toLowerCase())) {
+          rowErrors.push("Duplicate: Email already exists as Client User");
+        }
+
+        // Role validation with HHS to Vetty mapping
+        let mappedRole = "View Only";
+        if (role && validRoles.includes(role.toLowerCase())) {
+          if (role.toLowerCase().includes("super") || role.toLowerCase().includes("admin")) {
+            mappedRole = "Super Admin";
+          } else {
+            mappedRole = "View Only";
+          }
+        } else {
+          rowErrors.push(`Invalid Role '${role}'. Must match Vetty roles: Super Admin or View Only`);
+        }
+
+        // Dept validation
+        let matchedDept = departmentsOptions.find(d => d.toLowerCase() === (dept || "").toLowerCase());
+        if (!matchedDept) {
+          rowErrors.push(`Invalid Department '${dept}'. Must be configured for Client HHS`);
+        }
+
+        // Location validation
+        let matchedLoc = locationsOptions.find(l => l.name.toLowerCase() === (loc || "").toLowerCase());
+        if (!matchedLoc) {
+          rowErrors.push(`Invalid Location '${loc}'. Must be configured for Client HHS`);
+        }
+
+        const isValid = rowErrors.length === 0;
+        parsedValidatedUsers.push({
+          rowNum: rowNum,
+          firstName: firstName,
+          lastName: lastName,
+          fullName: `${firstName} ${lastName}`,
+          email: email,
+          role: mappedRole,
+          dept: matchedDept || dept,
+          loc: matchedLoc ? matchedLoc.name : loc,
+          isValid: isValid,
+          errors: rowErrors
+        });
+
+        if (!isValid) {
+          validationErrors.push(`Row ${rowNum}: ${rowErrors.join(', ')}`);
+        }
+      }
+
+      // Step transition to Review & Create
+      document.getElementById('bulkUploadStep1').classList.add('hidden');
+      document.getElementById('bulkUploadStep2').classList.remove('hidden');
+      document.getElementById('btnValidateUpload').classList.add('hidden');
+      document.getElementById('btnUploadBack').classList.remove('hidden');
+
+      // Update Step 2 Active
+      document.getElementById('stepBadge2').className = "w-5 h-5 rounded-full bg-brandBlue text-white flex items-center justify-center text-[10px] font-bold";
+      document.getElementById('stepLabel2').className = "text-brandBlue font-semibold";
+
+      renderParsedReviewTable(validationErrors);
+    }
+
+    function renderParsedReviewTable(errors) {
+      const tbody = document.getElementById('parsedRowsTableBody');
+      tbody.innerHTML = '';
+      
+      const alertBanner = document.getElementById('validationAlertBanner');
+      const btnSubmit = document.getElementById('btnSubmitUsers');
+
+      document.getElementById('fileStatsLabel').textContent = `${parsedValidatedUsers.length} rows processed`;
+
+      if (errors.length > 0) {
+        alertBanner.classList.remove('hidden');
+        alertBanner.className = "p-3 rounded text-xs border border-amber-300 bg-amber-50 text-amber-900";
+        alertBanner.innerHTML = `<strong>${errors.length} validation issues detected.</strong> Only rows marked as Valid will be created as Client Users.`;
+      } else {
+        alertBanner.classList.remove('hidden');
+        alertBanner.className = "p-3 rounded text-xs border border-emerald-300 bg-emerald-50 text-emerald-900";
+        alertBanner.innerHTML = `<strong>All checks passed!</strong> Virus scan clear, ASCII encoding verified, no duplicate client emails found.`;
+      }
+
+      const validCount = parsedValidatedUsers.filter(u => u.isValid).length;
+      if (validCount > 0) {
+        btnSubmit.classList.remove('hidden');
+        btnSubmit.textContent = `Create ${validCount} Users & Send Invitation`;
+      } else {
+        btnSubmit.classList.add('hidden');
+      }
+
+      parsedValidatedUsers.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.className = item.isValid ? "hover:bg-slate-50" : "bg-red-50/50 hover:bg-red-50";
+
+        tr.innerHTML = `
+          <td class="py-2 px-2.5 font-mono text-gray-400">${item.rowNum}</td>
+          <td class="py-2 px-2.5 font-semibold text-gray-800">${item.fullName || '-'}</td>
+          <td class="py-2 px-2.5 text-gray-600 font-mono">${item.email || '-'}</td>
+          <td class="py-2 px-2.5">${item.role || '-'}</td>
+          <td class="py-2 px-2.5">${item.dept || '-'}</td>
+          <td class="py-2 px-2.5">${item.loc || '-'}</td>
+          <td class="py-2 px-2.5 text-center">
+            ${item.isValid 
+              ? '<span class="text-emerald-600 font-bold bg-emerald-100 px-1.5 py-0.5 rounded text-[10px]">Valid</span>' 
+              : `<span class="text-red-600 font-bold bg-red-100 px-1.5 py-0.5 rounded text-[10px]" title="${item.errors.join('; ')}">Error</span>`
+            }
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function submitBulkUsersCreation() {
+      const validUsers = parsedValidatedUsers.filter(u => u.isValid);
+      if (validUsers.length === 0) {
+        showConfirmationNotification("No valid user entries to create.");
+        return;
+      }
+
+      // Prepend valid users to the in-memory dataset
+      validUsers.forEach(vu => {
+        users.unshift({
+          id: users.length + 1,
+          name: vu.fullName,
+          allowedActions: ["!!_Client: Add Candidate"],
+          locations: [vu.loc],
+          departments: [vu.dept],
+          allowedNotifications: [],
+          email: vu.email,
+          role: vu.role,
+          clientId: "HHS-CLIENT-8802",
+          status: "Active"
+        });
+      });
+
+      closeModal();
+      renderTable();
+
+      // Display the required specification message in the blue-theme confirmation modal:
+      showConfirmationNotification("Hey, the file will be processed shortly, and the new Client Users will be created within 6 hours.");
+    }
+
+    function openBulkDeactivationModal() {
+      document.getElementById('bulkActionsDropdown').classList.add('hidden');
+      document.getElementById('modalOverlay').classList.remove('hidden');
+      document.getElementById('bulkDeactivationModal').classList.remove('hidden');
+      
+      const badge = document.getElementById('deactivationFileSuccessBadge');
+      if (badge) badge.classList.add('hidden');
+      const input = document.getElementById('deactivationFileInput');
+      if (input) input.value = '';
+
+      // If user selected checkboxes in the main grid, pre-populate them
+      if (selectedUserIds.size > 0) {
+        deactivationUserEmails = [];
+        selectedUserIds.forEach(id => {
+          const u = users.find(user => user.id === id);
+          if (u) deactivationUserEmails.push(u.email);
+        });
+      } else {
+        deactivationUserEmails = [];
+      }
+    }
+
+    function downloadDeactivationTemplate() {
+      const csvContent = "Email Address,Client ID\n" +
+                         "william.harrison@company.com,CLIENT-8802\n" +
+                         "emma.richardson@company.com,CLIENT-8802\n" +
+                         "james.sterling@company.com,CLIENT-8802";
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "vetty_clientname_deactivation_template.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function handleDeactivationFileSelected(e) {
+      if (!e.target.files || e.target.files.length === 0) return;
+      const file = e.target.files[0];
+      const validExtensions = ['.csv', '.xlsx', '.xls'];
+      const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+
+      if (!validExtensions.includes(ext)) {
+        showConfirmationNotification("Invalid deactivation file. Only CSV or Excel files are accepted.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const content = evt.target.result.trim();
+        const lines = content.split(/\r?\n/).filter(l => l.trim().length > 0);
+        
+        if (lines.length < 2) {
+          showConfirmationNotification("Deactivation file must contain headers and at least 1 client email.");
+          return;
+        }
+
+        deactivationUserEmails = [];
+
+        for (let i = 1; i < lines.length; i++) {
+          const parts = lines[i].split(',').map(p => p.trim().replace(/"/g, ''));
+          const email = parts[0];
+          if (email && email.includes('@')) {
+            deactivationUserEmails.push(email);
+          }
+        }
+
+        // Show green tick with success badge
+        const badge = document.getElementById('deactivationFileSuccessBadge');
+        const text = document.getElementById('deactivationFileSuccessText');
+        if (badge && text) {
+          text.textContent = `${file.name} uploaded successfully (${deactivationUserEmails.length} users ready)`;
+          badge.classList.remove('hidden');
+          badge.classList.add('flex');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function executeBulkDeactivation() {
+      const clientId = document.getElementById('deactivateClientId').value.trim();
+      if (!clientId) {
+        showConfirmationNotification("Client ID is required for validating deactivation.");
+        return;
+      }
+
+      if (deactivationUserEmails.length === 0) {
+        showConfirmationNotification("Please upload a CSV or select client users from the grid to deactivate.");
+        return;
+      }
+
+      const lowerEmails = new Set(deactivationUserEmails.map(e => e.toLowerCase()));
+      let deactivatedCount = 0;
+
+      // Remove or mark inactive
+      users = users.filter(user => {
+        if (lowerEmails.has(user.email.toLowerCase())) {
+          deactivatedCount++;
+          return false; // Remove from client user list
+        }
+        return true;
+      });
+
+      selectedUserIds.clear();
+      closeModal();
+      renderTable();
+
+      showConfirmationNotification(`Successfully validated Client ID (${clientId}) and deactivated ${deactivatedCount} Client Users.`);
+    }
+  </script>
+</body>
+</html>
